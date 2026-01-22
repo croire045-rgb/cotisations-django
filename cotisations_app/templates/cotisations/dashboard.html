@@ -1,0 +1,118 @@
+{% extends 'cotisations/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Suivi des Cotisations BM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>Suivi des Cotisations BM</h1>
+                <p class="subtitle">Janvier 2026 - Décembre 2028 • 36 mois</p>
+            </div>
+            <a href="{% url 'logout' %}" class="btn-logout">🚪 Déconnexion</a>
+        </div>
+    </header>
+
+    <!-- Configuration EmailJS (caché) -->
+    <div id="emailjs-config" 
+         data-service-id="{{ emailjs_service_id }}"
+         data-template-id="{{ emailjs_template_id }}"
+         data-public-key="{{ emailjs_public_key }}"
+         style="display: none;"></div>
+
+    <!-- Sélecteur d'année -->
+    <div class="year-selector">
+        <button class="year-btn active" data-year="2026">2026</button>
+        <button class="year-btn" data-year="2027" disabled>2027 <span class="lock-icon">🔒</span></button>
+        <button class="year-btn" data-year="2028" disabled>2028 <span class="lock-icon">🔒</span></button>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <!-- Dashboard stats -->
+    <div class="dashboard">
+        <div class="stat-card">
+            <div class="stat-label">Total Attendu</div>
+            <div class="stat-value">7 200 000 FCFA</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Collecté</div>
+            <div class="stat-value success" id="totalCollected">0 FCFA</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Reste à Collecter</div>
+            <div class="stat-value danger" id="remaining">7 200 000 FCFA</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Taux de Recouvrement</div>
+            <div class="stat-value accent" id="recoveryRate">0%</div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="table-container">
+            <div class="table-header">
+                <h2 class="table-title" id="tableYearTitle">Registre 2026</h2>
+                <button class="export-btn" onclick="exportToExcel()"><strong>📥 Exporter en Excel</strong></button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="cotisationsTable">
+                    <thead>
+                        <tr>
+                            <th>Mois</th>
+                            <th>Prévis</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Prodiges</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="summary-panel">
+            <h2 class="summary-title">Résumé Individuel</h2>
+            
+            <div class="person-summary">
+                <div class="person-name">MANANGA KIBANGOU Prévis Croire</div>
+                <div class="person-stats">
+                    <span>Paiements effectués:</span>
+                    <span id="manangaPaid">0 / 36</span>
+                </div>
+                <div class="person-stats">
+                    <span>Total collecté:</span>
+                    <span id="manangaTotal">0 FCFA</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="manangaProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="person-summary">
+                <div class="person-name">BADINGOUSSOU-PEMBA Splendeurs Prodiges</div>
+                <div class="person-stats">
+                    <span>Paiements effectués:</span>
+                    <span id="prodigesPaid">0 / 36</span>
+                </div>
+                <div class="person-stats">
+                    <span>Total collecté:</span>
+                    <span id="prodigesTotal">0 FCFA</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="prodigesProgress" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Suivi des Cotisations BM • Django REST API</p>
+    </footer>
+</div>
+{% endblock %}
