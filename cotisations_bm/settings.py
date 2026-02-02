@@ -1,13 +1,15 @@
 
 from pathlib import Path
 from decouple import config
-
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', cast=bool, default=True)
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key')
+
+DEBUG = config('DEBUG', cast=bool, default=False)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*").split(",")
+
 
 
 INSTALLED_APPS = [
